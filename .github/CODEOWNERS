@@ -1,0 +1,17 @@
+# Every PR touching a domain folder requires approval from someone who is not
+# that domain's sole author, per GUIDELINES.md Section 1. Fill in GitHub
+# usernames below (not real names/USNs) once the repo is created.
+#
+# This file only takes effect once branch protection has "Require review from
+# Code Owners" enabled — see docs/BRANCH_PROTECTION_SETUP.md.
+
+/src/churn/      @churn-owner-github-username
+/src/fraud/      @fraud-owner-github-username
+/src/demand/     @demand-owner-github-username
+
+# Joint-owned — any of the three can review.
+/src/allocation/ @churn-owner-github-username @fraud-owner-github-username @demand-owner-github-username
+
+# Guidelines and assumptions register changes need all three to be aware.
+/GUIDELINES.md               @churn-owner-github-username @fraud-owner-github-username @demand-owner-github-username
+/docs/assumptions_register.md @churn-owner-github-username @fraud-owner-github-username @demand-owner-github-username
