@@ -8,6 +8,7 @@ statsmodels>=0.14
 shap>=0.44
 matplotlib>=3.7
 streamlit>=1.30
+optuna>=3.5
 
 # dev / CI
 pytest>=8.0
