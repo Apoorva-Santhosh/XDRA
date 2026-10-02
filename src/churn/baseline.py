@@ -4,6 +4,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score, average_precision_sco
 from sklearn.preprocessing import StandardScaler
 from src.churn.preprocess import load_and_clean, encode_features, split_data
 
+
 def majority_class_baseline(y_train, y_test):
     majority_class = y_train.mode()[0]
     preds = np.full(shape=y_test.shape, fill_value=majority_class)
@@ -12,9 +13,10 @@ def majority_class_baseline(y_train, y_test):
     print(f"Accuracy: {acc:.4f}")
     return acc
 
+
 def logistic_regression_baseline(X_train, X_test, y_train, y_test):
     # Scale numeric features (LogReg is sensitive to feature scale)
-    numeric_cols = ['tenure', 'MonthlyCharges', 'TotalCharges']
+    numeric_cols = ["tenure", "MonthlyCharges", "TotalCharges"]
     scaler = StandardScaler()
     X_train_scaled = X_train.copy()
     X_test_scaled = X_test.copy()
@@ -37,6 +39,7 @@ def logistic_regression_baseline(X_train, X_test, y_train, y_test):
     print(f"PR-AUC: {pr_auc:.4f}")
 
     return model, scaler, {"accuracy": acc, "roc_auc": roc_auc, "pr_auc": pr_auc}
+
 
 if __name__ == "__main__":
     df = load_and_clean()

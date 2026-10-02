@@ -4,6 +4,7 @@ from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, roc_auc_score, average_precision_score
 from src.churn.preprocess import load_and_clean, encode_features, split_data
 
+
 def evaluate_model(model, X_train, X_test, y_train, y_test, name):
     model.fit(X_train, y_train)
     preds = model.predict(X_test)
@@ -20,15 +21,16 @@ def evaluate_model(model, X_train, X_test, y_train, y_test, name):
 
     return model, {"accuracy": acc, "roc_auc": roc_auc, "pr_auc": pr_auc}
 
+
 def random_forest_baseline(X_train, X_test, y_train, y_test):
     model = RandomForestClassifier(n_estimators=200, random_state=42, n_jobs=-1)
     return evaluate_model(model, X_train, X_test, y_train, y_test, "Random Forest")
 
+
 def xgboost_baseline(X_train, X_test, y_train, y_test):
-    model = XGBClassifier(
-        n_estimators=200, random_state=42, eval_metric='logloss', n_jobs=-1
-    )
+    model = XGBClassifier(n_estimators=200, random_state=42, eval_metric="logloss", n_jobs=-1)
     return evaluate_model(model, X_train, X_test, y_train, y_test, "XGBoost")
+
 
 if __name__ == "__main__":
     df = load_and_clean()

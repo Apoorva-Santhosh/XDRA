@@ -6,18 +6,27 @@ from sklearn.metrics import brier_score_loss, roc_auc_score, average_precision_s
 from src.churn.preprocess import load_and_clean, encode_features, split_data
 
 BEST_PARAMS = {
-    'n_estimators': 366, 'max_depth': 2, 'learning_rate': 0.0586821397910316,
-    'subsample': 0.851152547181656, 'colsample_bytree': 0.8190391410281874,
-    'min_child_weight': 7, 'gamma': 2.1634970204332697,
-    'reg_alpha': 0.7323889895083887, 'reg_lambda': 3.7848968114467025,
-    'random_state': 42, 'eval_metric': 'logloss', 'n_jobs': -1
+    "n_estimators": 366,
+    "max_depth": 2,
+    "learning_rate": 0.0586821397910316,
+    "subsample": 0.851152547181656,
+    "colsample_bytree": 0.8190391410281874,
+    "min_child_weight": 7,
+    "gamma": 2.1634970204332697,
+    "reg_alpha": 0.7323889895083887,
+    "reg_lambda": 3.7848968114467025,
+    "random_state": 42,
+    "eval_metric": "logloss",
+    "n_jobs": -1,
 }
+
 
 def calibrate_model(X_train, y_train, method="isotonic"):
     base_model = XGBClassifier(**BEST_PARAMS)
     calibrated = CalibratedClassifierCV(base_model, method=method, cv=5)
     calibrated.fit(X_train, y_train)
     return calibrated
+
 
 def evaluate_calibration(model, X_test, y_test, label):
     probs = model.predict_proba(X_test)[:, 1]
@@ -29,6 +38,7 @@ def evaluate_calibration(model, X_test, y_test, label):
     print(f"ROC-AUC: {roc_auc:.4f}")
     print(f"PR-AUC: {pr_auc:.4f}")
     return probs, {"brier": brier, "roc_auc": roc_auc, "pr_auc": pr_auc}
+
 
 def plot_calibration_curve(y_test, prob_dict, save_path="outputs/churn_calibration_curve.png"):
     plt.figure(figsize=(7, 7))
@@ -42,9 +52,11 @@ def plot_calibration_curve(y_test, prob_dict, save_path="outputs/churn_calibrati
     plt.legend()
     plt.tight_layout()
     import os
+
     os.makedirs("outputs", exist_ok=True)
     plt.savefig(save_path)
     print(f"\nCalibration curve saved to {save_path}")
+
 
 if __name__ == "__main__":
     df = load_and_clean()
@@ -53,9 +65,15 @@ if __name__ == "__main__":
 
     uncalibrated = XGBClassifier(**BEST_PARAMS)
     uncalibrated.fit(X_train, y_train)
-    uncal_probs, uncal_metrics = evaluate_calibration(uncalibrated, X_test, y_test, "Uncalibrated XGBoost")
+    uncal_probs, uncal_metrics = evaluate_calibration(
+        uncalibrated, X_test, y_test, "Uncalibrated XGBoost"
+    )
 
     calibrated = calibrate_model(X_train, y_train, method="isotonic")
-    cal_probs, cal_metrics = evaluate_calibration(calibrated, X_test, y_test, "Calibrated XGBoost (isotonic)")
+    cal_probs, cal_metrics = evaluate_calibration(
+        calibrated, X_test, y_test, "Calibrated XGBoost (isotonic)"
+    )
 
-    plot_calibration_curve(y_test, {"Uncalibrated": uncal_probs, "Calibrated (isotonic)": cal_probs})
+    plot_calibration_curve(
+        y_test, {"Uncalibrated": uncal_probs, "Calibrated (isotonic)": cal_probs}
+    )

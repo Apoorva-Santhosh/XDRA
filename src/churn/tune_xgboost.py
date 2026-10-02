@@ -5,6 +5,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.metrics import accuracy_score, roc_auc_score, average_precision_score
 from src.churn.preprocess import load_and_clean, encode_features, split_data
 
+
 def objective(trial, X_train, y_train):
     params = {
         "n_estimators": trial.suggest_int("n_estimators", 100, 500),
@@ -26,6 +27,7 @@ def objective(trial, X_train, y_train):
     scores = cross_val_score(model, X_train, y_train, cv=cv, scoring="average_precision", n_jobs=-1)
     return scores.mean()
 
+
 def tune(X_train, y_train, n_trials=50):
     study = optuna.create_study(direction="maximize")
     study.optimize(lambda trial: objective(trial, X_train, y_train), n_trials=n_trials)
@@ -33,6 +35,7 @@ def tune(X_train, y_train, n_trials=50):
     print(f"\nBest PR-AUC (CV): {study.best_value:.4f}")
     print(f"Best params: {study.best_params}")
     return study.best_params
+
 
 def evaluate_tuned_model(best_params, X_train, X_test, y_train, y_test):
     best_params = {**best_params, "random_state": 42, "eval_metric": "logloss", "n_jobs": -1}
@@ -52,6 +55,7 @@ def evaluate_tuned_model(best_params, X_train, X_test, y_train, y_test):
     print(f"PR-AUC: {pr_auc:.4f}")
 
     return model, {"accuracy": acc, "roc_auc": roc_auc, "pr_auc": pr_auc}
+
 
 if __name__ == "__main__":
     df = load_and_clean()
