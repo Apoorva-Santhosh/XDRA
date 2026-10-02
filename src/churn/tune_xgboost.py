@@ -1,9 +1,9 @@
 import optuna
-import numpy as np
-from xgboost import XGBClassifier
+from sklearn.metrics import accuracy_score, average_precision_score, roc_auc_score
 from sklearn.model_selection import StratifiedKFold, cross_val_score
-from sklearn.metrics import accuracy_score, roc_auc_score, average_precision_score
-from src.churn.preprocess import load_and_clean, encode_features, split_data
+from xgboost import XGBClassifier
+
+from src.churn.preprocess import encode_features, load_and_clean, split_data
 
 
 def objective(trial, X_train, y_train):
@@ -49,7 +49,7 @@ def evaluate_tuned_model(best_params, X_train, X_test, y_train, y_test):
     roc_auc = roc_auc_score(y_test, probs)
     pr_auc = average_precision_score(y_test, probs)
 
-    print(f"\nTuned XGBoost — test set performance")
+    print("\nTuned XGBoost — test set performance")
     print(f"Accuracy: {acc:.4f}")
     print(f"ROC-AUC: {roc_auc:.4f}")
     print(f"PR-AUC: {pr_auc:.4f}")

@@ -1,8 +1,8 @@
-import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, average_precision_score, roc_auc_score
 from xgboost import XGBClassifier
-from sklearn.metrics import accuracy_score, roc_auc_score, average_precision_score
-from src.churn.preprocess import load_and_clean, encode_features, split_data
+
+from src.churn.preprocess import encode_features, load_and_clean, split_data
 
 
 def evaluate_model(model, X_train, X_test, y_train, y_test, name):

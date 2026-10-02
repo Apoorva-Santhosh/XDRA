@@ -1,9 +1,9 @@
-import numpy as np
 import matplotlib.pyplot as plt
-from xgboost import XGBClassifier
 from sklearn.calibration import CalibratedClassifierCV, calibration_curve
-from sklearn.metrics import brier_score_loss, roc_auc_score, average_precision_score
-from src.churn.preprocess import load_and_clean, encode_features, split_data
+from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
+from xgboost import XGBClassifier
+
+from src.churn.preprocess import encode_features, load_and_clean, split_data
 
 BEST_PARAMS = {
     "n_estimators": 366,
