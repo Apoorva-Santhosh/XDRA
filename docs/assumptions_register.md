@@ -10,9 +10,11 @@ Add a new row whenever you introduce a new invented value. Do not silently chang
 | Churn | `RetentionCost` | ₹500 (call) / ₹1,500 (discount offer) | `src/churn/expected_value.py` | Documented flat/tiered assumption, not from data. |
 | Churn | `CLV` proxy | `MonthlyCharges × expected_remaining_tenure` | `src/churn/expected_value.py` | Telco has no true CLV field; this is a standard heuristic proxy. |
 | Fraud | `InvestigationCost` | ₹200 flat (or scaled by transaction complexity — decide and log which) | `src/fraud/expected_value.py` | Not in dataset; flat estimate for a manual review. |
-| Demand | Starting inventory | "X days of trailing average demand" — **fill in X** | `src/demand/reorder.py` | M5 has sales, not stock levels; must be simulated. |
-| Demand | `StockoutCost` | *fill in* (e.g. per-unit margin lost) | `src/demand/reorder.py` | Not in dataset. |
-| Demand | `HoldingCost` | *fill in* (e.g. per-unit storage cost/day) | `src/demand/reorder.py` | Not in dataset. |
+| Demand | Store/department scope | `CA_1`, `TX_1`, `WI_1` × all 7 departments (21 store-department series) | `src/demand/preprocess.py` | §2.3 requires 2–3 stores at store-department level. One store per state covers all three state SNAP calendars; taking each state's first store avoids picking stores by forecast performance. |
+| Demand | Starting inventory | 14 days of trailing 28-day average daily demand (previously: X to be filled in) | `src/demand/reorder.py` | M5 has sales, not stock levels; must be simulated. Two weeks of cover is a typical small-retailer stock level and leaves a shortage over the 28-day horizon, so a reorder decision exists. |
+| Demand | `StockoutCost` | 30% gross margin × unit price, per unit of unmet demand (previously: to be filled in) | `src/demand/reorder.py` | Not in dataset. Lost margin per unit short; 30% is a mid-range retail gross margin. Unit price is the volume-weighted M5 `sell_price` over the trailing 28 days. |
+| Demand | `HoldingCost` | 25% of unit cost per year, charged per unit per day; unit cost = unit price × (1 − 30% margin) (previously: to be filled in) | `src/demand/reorder.py` | Not in dataset. Within the standard 20–30%/yr carrying-cost range (capital, storage, shrinkage). Reorder stock is assumed drawn down linearly, so on average half the order is held over the 28-day horizon. |
+| Demand | USD → INR rate | ₹83 per USD | `src/demand/reorder.py` | M5 `sell_price` is in USD; converted so demand values are in the same currency as the other domains. Held fixed for reproducibility. |
 
 ## Rules
 
