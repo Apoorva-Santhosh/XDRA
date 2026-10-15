@@ -6,11 +6,11 @@ This file is binding for all three domain pipelines. The allocation engine (Sect
 
 ## 1. Team assignment
 
-| Domain | Owner | Backup reviewer |
+| Domain | Owner |
 |---|---|---|
-| Churn (easiest — build first) | *fill in* | *fill in* |
-| Fraud | *fill in* | *fill in* |
-| Demand (hardest — build last) | *fill in* | *fill in* |
+| Churn | Aadya |
+| Fraud | Apoorva | 
+| Demand | Sanskriti | 
 
 Rules:
 - Each pipeline has exactly one owner. The other two teammates are backup reviewers who must be able to run the pipeline end-to-end from a clean checkout — if only the owner can run it, it isn't done.
