@@ -55,6 +55,7 @@ cd x-dra
 python -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+brew install libomp             # macOS only: OpenMP runtime needed by XGBoost and LightGBM
 ```
 
 No GPU required anywhere in this project — every pipeline is scoped to run on a standard laptop or Google Colab's free CPU tier (see Section 30 of the project plan for the reasoning).
