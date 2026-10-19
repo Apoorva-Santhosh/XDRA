@@ -13,6 +13,11 @@ Add a new row whenever you introduce a new invented value. Do not silently chang
 | Demand | Starting inventory | "X days of trailing average demand" — **fill in X** | `src/demand/reorder.py` | M5 has sales, not stock levels; must be simulated. |
 | Demand | `StockoutCost` | *fill in* (e.g. per-unit margin lost) | `src/demand/reorder.py` | Not in dataset. |
 | Demand | `HoldingCost` | *fill in* (e.g. per-unit storage cost/day) | `src/demand/reorder.py` | Not in dataset. |
+| Churn | USD → INR conversion | ₹85 per $1 | `src/churn/expected_value.py` | Telco `MonthlyCharges` is dollar-scale; it must be converted to compare against the ₹ intervention costs. Approximate rate, not from data. |
+| Churn | `expected_remaining_tenure` (CLV proxy term) | Month-to-month: 12 months, One year: 24 months, Two year: 36 months | `src/churn/expected_value.py` | Telco has no true remaining-lifetime field; fixed months by contract type is a simple heuristic. `CLV = MonthlyCharges × 85 × expected_remaining_tenure`. |
+| Churn | `P(save \| discount offer)` | 45% (test 35% / 45% / 55% as a sensitivity range) | `src/churn/expected_value.py` | No field in Telco data. A ₹1,500 discount is assumed more effective than a ₹500 call (30%); otherwise the discount could never be worth its extra cost. Sensitivity range required in Phase 7 — do not present 45% as fact. |
+| Churn | Intervention choice rule | For each customer, fund whichever of call (₹500, 30%) or discount (₹1,500, 45%) has the higher net value. The discount wins when `P(churn) × CLV > ₹6,667` (= (1,500 − 500) / (0.45 − 0.30)). | `src/churn/expected_value.py` | Each customer produces one candidate carrying its best intervention, so the allocation engine never funds two actions for the same customer. The breakeven is derived from the two save rates and costs above, so it moves if either is changed. |
+| Churn | Scoring population | All 7,043 customers scored with 5-fold out-of-fold probabilities | `src/churn/expected_value.py` | Dataset is a snapshot; true labels are not used to filter candidates, to avoid leakage. |
 
 ## Rules
 
